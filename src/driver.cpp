@@ -1,26 +1,62 @@
-// #include "../include/driver.h"
-//
-// #include <iostream>
-//
-//
-// int mockMethod(){
-//   // Method to test that the test framework works;
-//
-//   return 1;
-// }
-//
-// int main(int argc, char* argv[])
-// {
-//     // Check the number of parameters
-//     if (argc < 2) {
-//         // Tell the user how to run the program
-//         std::cerr << "Usage: " << argv[0] << " NAME" << std::endl;
-//         /* "Usage messages" are a conventional way of telling the user
-//          * how to run a program if they enter the command incorrectly.
-//          */
-//         return 1;
-//     }
-//     // Print the user's name:
-//     std::cout << argv[0] << "says hello, " << argv[1] << "!" << std::endl;
-//     return 0;
-// }
+#include "../include/driver.h"
+
+#include <iostream>
+
+
+int mockMethod(){
+  // Method to test that the test framework works;
+
+  return 1;
+}
+
+Operations parse_args(int argc, char* argv[])
+{
+    bool run_failed = false;
+    if (argc<6){
+      if(argc==5){
+        // -d i j output file name:  compute a difference map between images i and j, and write this out to file
+        std::string s = argv[2];
+        std::string s1 = argv[1];
+        std::string s2 = argv[3];
+
+        bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
+        if(s1=="-d"&&has_only_digits==true&&s2=="j")return Operations::DIFF_MAP;
+
+      }else if(argc == 4){
+        // -x i output file name:  extract and write the slice with number i and write this out to file.
+        std::string s = argv[2];
+        std::string s1 = argv[1];
+        bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
+        if(s1=="-x"&&has_only_digits==true) return Operations::EXTRACT;
+
+
+      }else if(argc == 1)return Operations::BUILD;
+        // build the internal representation
+        // and then exit after ensuring memory is correctly cleaned up,
+        // and print the following to the console:
+        // Number of images:  (int)
+        // Number of bytes required:  (int)
+
+      }
+
+
+    return Operations::FAIL;
+
+    // if(run_failed == true){
+    //   showUsage();
+    //   return 1;
+    // }else{
+    //   return 0;
+    // }
+
+
+
+
+}
+
+
+void showUsage(){
+  std::cerr << "Usage: " << "runner" << " -d i j output file name" << std::endl;
+  std::cerr << "Usage: " << "runner" << " -x i output file name" << std::endl;
+  std::cerr << "Usage: " << "runner" << "" << std::endl;
+}

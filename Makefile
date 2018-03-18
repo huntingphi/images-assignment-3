@@ -36,18 +36,21 @@ CXXFLAGS = -std=c++11 -Wall
 VPATH = test src include bin build
 
 runner: volimage.o driver.o
+	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o && bin/runner "test" --success
 
+driver.o: driver.cpp driver.h
+	$(CXX) $(CXXFLAGS) -c src/driver.cpp -o build/driver.o
 
 volimage.o: volimage.cpp volimage.h
 	$(CXX) $(CXXFLAGS) -c src/volimage.cpp -o build/volimage.o
 
 
-test: 000-CatchMain.o volimage.o tests-volimage.o
+test: 000-CatchMain.o volimage.o driver.o tests-volimage.o
 	./bin/tests-volimage --success
 
 
 tests-volimage.o: tests-volimage.cpp
-	$(CXX) $(CXXFLAGS) -I ./include -o bin/tests-volimage build/000-CatchMain.o build/volimage.o test/tests-volimage.cpp
+	$(CXX) $(CXXFLAGS) -I ./include -o bin/tests-volimage build/000-CatchMain.o build/volimage.o build/driver.o test/tests-volimage.cpp
 
 
 000-CatchMain.o: 000-CatchMain.cpp catch.hpp
