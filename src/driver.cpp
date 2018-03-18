@@ -2,6 +2,27 @@
 
 #include <iostream>
 
+int main(int argc, char *argv[]) {
+  Operations op = parse_args(argc,argv);
+  switch (op) {
+    case Operations::BUILD:
+      std::cout << "Building image..." << '\n';
+
+      break;
+    case Operations::DIFF_MAP:
+      std::cout << "Calculating difference map..." << '\n';
+
+      break;
+    case Operations::EXTRACT:
+      std::cout << "Extracting..." << '\n';
+      break;
+    case Operations::FAIL:
+      showUsage();
+      break;
+  }
+  return 0;
+}
+
 
 int mockMethod(){
   // Method to test that the test framework works;
@@ -20,7 +41,9 @@ Operations parse_args(int argc, char* argv[])
         std::string s2 = argv[3];
 
         bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
-        if(s1=="-d"&&has_only_digits==true&&s2=="j")return Operations::DIFF_MAP;
+        bool has_only_digits_1 = (s2.find_first_not_of( "0123456789" ) == -1);
+
+        if(s1=="-d"&&has_only_digits==true&&has_only_digits_1==true)return Operations::DIFF_MAP;
 
       }else if(argc == 4){
         // -x i output file name:  extract and write the slice with number i and write this out to file.

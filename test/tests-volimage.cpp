@@ -9,14 +9,14 @@ TEST_CASE("Test the test runner","[multi-file:2]"){
   REQUIRE(v.mockMethod()==1);
 }
 
-TEST_CASE("Test the program runner runner","[multi-file:1]"){
+TEST_CASE("Test the arguments parser","[multi-file:1]"){
 
   int argc = 0;
   char* option1[1] = { "One"};//should pass
   char* option2[2] = { "One", "Two"};//should fail
   char* option3[3] = { "One", "Two","Three"};//should fail
   char* option4[4] = { "One", "-x","5","random_string"};//should pass
-  char* option5[5] = { "One", "-d","5","j","random_string"};//should pass
+  char* option5[5] = { "One", "-d","5","2","random_string"};//should pass
   char* option6[6] = { "One", "-x","5","","random_string","random"};//should fail
   argc++;
   REQUIRE(parse_args(argc,option1)==Operations::BUILD);//should pass
@@ -36,7 +36,16 @@ TEST_CASE("Test the program runner runner","[multi-file:1]"){
   argc++;
   REQUIRE(parse_args(argc,option6)==Operations::FAIL);//should fail
 
+}
 
+TEST_CASE("Test image extraction"){
 
+}
+
+TEST_CASE("Test diffmap"){
+
+}
+
+TEST_CASE("Test build"){
 
 }
