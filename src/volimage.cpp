@@ -11,21 +11,11 @@ int VolImage::mockMethod(){
   return 1;
 }
 
-
-
-  // private members
-
-  int width, height;
-  // width and height of image stack
-
-  std::vector<unsigned char**> slices;
-  // data for each slice, in order
-
-
   // public members
 
   VolImage::VolImage(){
-    // default constructor - define in .cpp
+    width = 0;
+    height = 0;
 
   }
   VolImage::~VolImage(){
@@ -38,7 +28,7 @@ int VolImage::mockMethod(){
 
 
   bool VolImage::readImages(std::string baseName){
-    // compute difference map and write out;  define in .cpp
+
 
   }
 
@@ -53,6 +43,6 @@ int VolImage::mockMethod(){
   }
 
   int VolImage::volImageSize(void){
-    // define in .cpp
-
+    //TODO check if this works
+    return sizeof(slices);
   }
