@@ -51,8 +51,23 @@ volimage.o: volimage.cpp volimage.h
 	$(CXX) $(CXXFLAGS) -c src/volimage.cpp -o build/volimage.o
 
 
-test: 000-CatchMain.o volimage.o driver.o tests-volimage.o
+test: 000-CatchMain.o volimage.o driver.o tests-volimage.o Header.o utils.o tests-utils.o
 	./bin/tests-volimage --success
+	./bin/tests-utils --success
+
+
+
+tests-utils: 000-CatchMain.o tests-utils.cpp Header.o utils.o tests-utils.o
+	$(CXX) $(CXXFLAGS) -I ./include -o bin/tests-utils build/000-CatchMain.o build/Header.o build/utils.o build/tests-utils.o
+
+Header.o: Header.cpp
+	$(CXX) $(CXXFLAGS) -c src/Header.cpp -o build/Header.o
+
+utils.o: utils.cpp
+	$(CXX) $(CXXFLAGS) -c src/utils.cpp -o build/utils.o
+
+tests-utils.o: tests-utils.cpp
+	$(CXX) $(CXXFLAGS) -c test/tests-utils.cpp -o build/tests-utils.o
 
 
 tests-volimage.o: tests-volimage.cpp
@@ -66,3 +81,4 @@ tests-volimage.o: tests-volimage.cpp
 
 clean:
 	find . -type f \( -name "*.o" ! -name "000-CatchMain.o" -or -name "volimage-test" \) -delete
+	find . -type f \( -name "*.gch" -or -name "tests-utils" -or -name "runner" \) -delete
