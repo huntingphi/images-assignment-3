@@ -1,20 +1,30 @@
 #include "../include/driver.h"
-
 #include <iostream>
+
 
 int main(int argc, char *argv[]) {
         Operations op = parse_args(argc,argv);
         switch (op) {
         case Operations::BUILD:
                 std::cout << "Building image..." << '\n';
+                build(argv);
 
                 break;
         case Operations::DIFF_MAP:
                 std::cout << "Calculating difference map..." << '\n';
+                diffmap(argv);
+
 
                 break;
         case Operations::EXTRACT:
                 std::cout << "Extracting..." << '\n';
+                extract(argv);
+
+                break;
+        case Operations::EXTRACT_ACROSS_SLICES:
+                std::cout << "Extracting across all slices..." << '\n';
+                extract(argv);
+
                 break;
         case Operations::FAIL:
                 showUsage();
@@ -43,14 +53,25 @@ Operations parse_args(int argc, char* argv[])
                         bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
                         bool has_only_digits_1 = (s2.find_first_not_of( "0123456789" ) == -1);
 
-                        if(s1=="-d"&&has_only_digits==true&&has_only_digits_1==true) return Operations::DIFF_MAP;
+                        if(s1=="-d"&&has_only_digits==true&&has_only_digits_1==true) {
+                                i = atoi(argv[2]);
+                                j = atoi(argv[3]);
+                                output_name = argv[4];
+
+                                return Operations::DIFF_MAP;
+                        }
 
                 }else if(argc == 4) {
                         // -x i output file name:  extract and write the slice with number i and write this out to file.
                         std::string s = argv[2];
                         std::string s1 = argv[1];
                         bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
-                        if(s1=="-x"&&has_only_digits==true) return Operations::EXTRACT;
+                        if(has_only_digits==true) {
+                                if(s1=="-x") return Operations::EXTRACT;
+                                if(s1=="-g") return Operations::EXTRACT_ACROSS_SLICES;
+                                i = atoi(argv[2]);
+                                output_name = argv[3];
+                        }
 
 
                 }else if(argc == 1) return Operations::BUILD;
@@ -77,9 +98,41 @@ Operations parse_args(int argc, char* argv[])
 
 }
 
+void build(char* argv[]){
+        std::string baseName = argv[1];
+        // image = new VolImage();
+        image.readImages(baseName);
+
+        // std::cout << "lol" << '\n';
+
+}
+
+void extract(char* argv[]){
+        std::string baseName = argv[1];
+
+}
+
+void diffmap(char* argv[]){
+        std::string baseName = argv[1];
+
+}
+
+void extractAcrossSlices(char* argv[]){
+        std::string baseName = argv[1];
+
+}
+
+
 
 void showUsage(){
-        std::cerr << "Usage: " << "runner" << " -d i j output file name" << std::endl;
-        std::cerr << "Usage: " << "runner" << " -x i output file name" << std::endl;
-        std::cerr << "Usage: " << "runner" << "" << std::endl;
+        std::cerr << "Usage: " << "runner" << " <imageBase> -d i j output file name" << std::endl;
+        std::cerr << "Usage: " << "runner" << " <imageBase> -x i output file name" << std::endl;
+        std::cerr << "Usage: " << "runner" << " <imageBase> -g i output file name" << std::endl;
+
+        std::cerr << "Usage: " << "runner" << " <imageBase>" << std::endl;
+}
+
+void showOperationInfo(int num_imgs,int num_bytes){
+        std::cout << "Number of images: " <<num_imgs<< '\n';
+        std::cout << "Number of bytes required: " <<num_bytes<< '\n';
 }

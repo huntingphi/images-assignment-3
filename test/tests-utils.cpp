@@ -1,6 +1,5 @@
 #include "../include/catch.hpp"
 #include "../include/utils.h"
-#include "../include/Header.h"
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -8,9 +7,20 @@
 #include <vector>
 #include <algorithm>
 
+
+TEST_CASE("Test readDataFile"){
+        Metadata expected("MRI",429, 303, 123);
+        Metadata result = Utils::readDataFile("MRI");
+        REQUIRE(expected.baseName == result.baseName);
+        REQUIRE(expected.width == result.width);
+        REQUIRE(expected.height == result.height);
+        REQUIRE(expected.number_of_images == result.number_of_images);
+
+}
+
 TEST_CASE("Test readSlice"){
         std::ifstream expected_input( "/home/minad/Documents/CSC3022H/Assignments/Assignment 2/pointers and memory/assets/MRI0.raw", std::ios::binary );
-        Header h("test",6,4,1);
+        Metadata h("test",6,4,1);
         int height = h.height;
         int width = h.width;
         unsigned char line0[]="line 0";
@@ -37,7 +47,7 @@ TEST_CASE("Test writeSliceToFile"){
         std::ifstream expected_input( "/home/minad/Documents/CSC3022H/Assignments/Assignment 2/pointers and memory/assets/MRI0.raw",std::ios::in| std::ios::binary );
         // copies all expected data into buffer
         std::vector<char> expected_buffer((std::istreambuf_iterator<char>(expected_input)),(std::istreambuf_iterator<char>()));
-        Header h("MRI",429,303,123);
+        Metadata h("MRI",429,303,123);
         Utils::writeSliceToFile(Utils::readSlice(h,0),h,0);
         std::ifstream resulting_input( "/home/minad/Documents/CSC3022H/Assignments/Assignment 2/pointers and memory/assets_copy/MRI0copy.raw", std::ios::binary );
         // copies all resulting data into buffer
@@ -46,7 +56,7 @@ TEST_CASE("Test writeSliceToFile"){
 }
 
 TEST_CASE("Test readRawFiles"){
-        Header h("MRI",429,303,123);
+        Metadata h("MRI",429,303,123);
         int height = h.height;
         int width = h.width;
         std::vector<unsigned char**> raws = Utils::readRawFiles(h);
@@ -69,15 +79,15 @@ TEST_CASE("Test readRawFiles"){
 }
 
 TEST_CASE("Test VectorDifference"){
-        Header h("MRI",429,303,123);
+        Metadata h("MRI",429,303,123);
         std::vector<unsigned char**> volume = Utils::readRawFiles(h);
         Utils::writeSliceToFile(Utils::VectorDifference(h,volume,5,27),h,1);
         REQUIRE(1==1);
 }
 
 TEST_CASE("Test extractAcrossSlices"){
-        Header h("MRI",429,303,123);
-        Header o("MRI_ACROSS",429,123,1);
+        Metadata h("MRI",429,303,123);
+        Metadata o("MRI_ACROSS",429,123,1);
         std::vector<unsigned char**> volume = Utils::readRawFiles(h);
         // std::cout << (float)volume[0][0][0] << '\n';
         Utils::writeSliceToFile(Utils::extractAcrossSlices(h, volume, 0),o,0);

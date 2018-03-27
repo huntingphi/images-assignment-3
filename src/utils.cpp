@@ -1,4 +1,4 @@
-#include "../include/Header.h"
+// #include "../include/Metadata.h"
 #include "../include/utils.h"
 #include <vector>
 #include <iostream>
@@ -7,12 +7,22 @@
 
 using namespace Utils;
 
-Header readDataFile(std::string baseName){
+Metadata Utils::readDataFile(std::string baseName){
+        std::string filepath = "assets/"+baseName+".data";
+        std::ifstream dataFile(filepath);
+        std::string name = baseName;
+        int width, height, num_imgs;
+        dataFile >> width;
+        dataFile >> height;
+        dataFile >> num_imgs;
+        Metadata h(name,width,height,num_imgs);
+        return h;
+
 
 
 }
 
-std::vector<unsigned char**> Utils::readRawFiles(Header h){
+std::vector<unsigned char**> Utils::readRawFiles(Metadata h){
         std::string baseName = h.baseName;
         int number_of_images = h.number_of_images;
         std::vector<unsigned char**> slices;
@@ -23,7 +33,7 @@ std::vector<unsigned char**> Utils::readRawFiles(Header h){
 
 
 
-unsigned char** Utils::readSlice(Header h, int index){
+unsigned char** Utils::readSlice(Metadata h, int index){
         std::string baseName = h.baseName;
         int width = h.width;
         int height = h.height;
@@ -55,7 +65,7 @@ unsigned char** Utils::readSlice(Header h, int index){
         return pixel_rows;
 }
 
-void Utils::writeSliceToFile(unsigned char** slice, Header h, int index){
+void Utils::writeSliceToFile(unsigned char** slice, Metadata h, int index){
         std::string baseName = h.baseName;
         int width = h.width;
         int height = h.height;
@@ -73,7 +83,7 @@ void Utils::writeSliceToFile(unsigned char** slice, Header h, int index){
         raw_image.close();
 }
 
-unsigned char** Utils::VectorDifference(Header h,std::vector<unsigned char**> volume,int i, int j){
+unsigned char** Utils::VectorDifference(Metadata h,std::vector<unsigned char**> volume,int i, int j){
         int height = h.height;
         int width = h.width;
         unsigned char** diffmap = new unsigned char* [height];
@@ -87,7 +97,7 @@ unsigned char** Utils::VectorDifference(Header h,std::vector<unsigned char**> vo
         return diffmap;
 }
 
-unsigned char** Utils::extractAcrossSlices(Header h,std::vector<unsigned char**> volume,int row){
+unsigned char** Utils::extractAcrossSlices(Metadata h,std::vector<unsigned char**> volume,int row){
         int width = h.width;
         std::cout << width << '\n';
         int num_imgs = h.number_of_images;
