@@ -43,33 +43,66 @@ unsigned char** Utils::readSlice(Header h, int index){
         std::string baseName = h.baseName;
         int width = h.width;
         int height = h.height;
+        // std::cout << "width: "<<width << '\n';
+        // std::cout << "height: "<<height << '\n';
 
-        std::string filepath = "../assets/"+baseName+std::to_string(index)+".data";
-        std::ifstream raw_image(filepath,std::ios::binary);
+        std::string filepath = "assets/"+baseName+std::to_string(index)+".raw";
+        std::ifstream raw_image(filepath,std::ios::in|std::ios::binary);
+
+        if(!raw_image) { //Show if file found
+                // std::cout << filepath<<" FILE DNE!" << '\n';
+                // return false;
+                throw std::runtime_error("Could not open file");
+        }
         //Make a pointer to a pointer that points to a char
         unsigned char** pixel_rows;
         //Assign a pointer to the first element of the array(which is a pointer)
         // to the image**
         pixel_rows = new unsigned char* [height];
-        char buffer[width]; //*height];
+        char* buffer = new char[width+1]; //*height];
         // raw_image.read(buffer, width*height);
         int c = 0;
         for (int i = 0; i < height; i++) {
-                pixel_rows[i] = new unsigned char[width];
+                if(i!=0) std::cout << *(pixel_rows+(i-1)) << '\n';
+
+                // *(pixel_rows+i) = new unsigned char[width+1];
                 // std::cout << std::ios_base::cur << '\n';
-                raw_image.clear();             //clear the buffer
-                raw_image.seekg(i*width, std::ios::beg); //reset the reading position to beginning
+                raw_image.clear();                        //clear the buffer
+                raw_image.seekg(i*(width), std::ios::beg); //reset the reading position to beginning
+                // std::cout << raw_image.tellg() << '\n';
                 raw_image.read(buffer,width);
+                // printf("Buffer: %s",buffer);
+                // std::cout << '\n';
+                buffer[width] = '\0';
+
                 //copy(begin,end,destination)=> copies from begin index(inclusive) to end index(exclusive) to destination in a given array
                 // std::copy(buffer[i*width],buffer[i*width+width],pixel_rows[i]);
+                // std::cout << *(buffer+(width-1)) << '\n';
                 unsigned char* convert_var = reinterpret_cast<unsigned char*>(buffer);
-                pixel_rows[i] = convert_var;
-                c++;
+                *(convert_var+width) = '\0';
+                // printf("convert_var: %s",convert_var);
+                // std::cout << '\n';
 
+
+                *(pixel_rows+i) = convert_var;
+
+                // delete pixel_rows[i];
+                c++;
+                buffer = new char[width+1];
 
                 // ++i;
         }
-        std::cout << c<<" reads successful" << '\n';
+        // std::cout << *(pixel_rows+(1)) << '\n';
+
+        std::cout << height << '\n';
+        for (int i = 0; i < height; i++) {
+                std::cout<<"row: "<<*(pixel_rows+i);
+                std::cout << '\n';
+
+                /* code */
+        }
+
+        // std::cout << c<<" reads successful" << '\n';
 
         return pixel_rows;
 }
