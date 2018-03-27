@@ -6,7 +6,7 @@ struct Header {
         int height;
         int number_of_images;
 
-        Header(std::string name, int h, int w, int no_imgs) : baseName(name), height(h), width(w), number_of_images(no_imgs){
+        Header(std::string name, int w, int h, int no_imgs) : baseName(name), width(w), height(h),number_of_images(no_imgs){
         }
 
 };
