@@ -35,8 +35,8 @@ CXX = g++ # This is the main compiler
 CXXFLAGS = -std=c++11 -Wall
 VPATH = test src include bin build
 
-run-build: volimage.o driver.o
-	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o && bin/runner
+run-build: Metadata.o utils.o volimage.o driver.o
+	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o build/utils.o
 
 run-diffmap: volimage.o driver.o
 	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o && bin/runner -d 0 1 test

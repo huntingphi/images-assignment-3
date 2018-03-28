@@ -3,7 +3,7 @@
 #include <vector>
 #include "../include/volimage.h"
 #include "../include/utils.h"
-#include "../include/Metadata.h"
+// #include "../include/Metadata.h"
 
 
 
@@ -25,16 +25,21 @@ bool VolImage::readImages(std::string baseName){
         width = md.width;
         height = md.height;
         baseName = md.baseName;
+        number_of_images = md.number_of_images;
+        // std::cout << width<<height<<baseName << md.number_of_images<<'\n';
+        // slices = new
+        return true;
 }
 
 
 void VolImage::diffmap(int sliceI, int sliceJ, std::string output_prefix){
-        Metadata image_data = Utils::readDataFile(baseName);
+        Metadata image_data(baseName,width,height,number_of_images);
         Metadata output_data(output_prefix,width,height,1);
         Utils::writeSliceToFile(Utils::VectorDifference(image_data,slices,sliceI,sliceJ),output_data,0);
         // extract slice sliceId and write to output - define in .cpp
-
 }
+
+
 void VolImage::extract(int sliceId, std::string output_prefix){
         Metadata output_data(output_prefix,width,height,1);
         Utils::writeSliceToFile(slices[sliceId],output_data,sliceId);

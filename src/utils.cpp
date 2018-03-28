@@ -26,8 +26,11 @@ std::vector<unsigned char**> Utils::readRawFiles(Metadata h){
         std::string baseName = h.baseName;
         int number_of_images = h.number_of_images;
         std::vector<unsigned char**> slices;
-        for (int i = 0; i < number_of_images; i++)
-                slices.push_back(readSlice(h,int(i)));
+        // std::cout << baseName<<number_of_images << '\n';
+        for (int i = 0; i < number_of_images; i++) {
+                // std::cout << "i: "<<i << '\n';
+                slices.push_back(readSlice(h,i));
+        }
         return slices;
 }
 
@@ -86,6 +89,7 @@ void Utils::writeSliceToFile(unsigned char** slice, Metadata h, int index){
 unsigned char** Utils::VectorDifference(Metadata h,std::vector<unsigned char**> volume,int i, int j){
         int height = h.height;
         int width = h.width;
+        std::cout << height<<width << '\n';
         unsigned char** diffmap = new unsigned char* [height];
         for (int r = 0; r < height; r++) {
                 diffmap[r] = new unsigned char[width];

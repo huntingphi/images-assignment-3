@@ -3,7 +3,7 @@
 class VolImage {
 private:
 // private members
-int width, height;
+int width, height, number_of_images;
 std::string baseName;
 // width and height of image stack
 std::vector<unsigned char**> slices;
