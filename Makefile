@@ -82,3 +82,4 @@ tests-volimage.o: tests-volimage.cpp
 clean:
 	find . -type f \( -name "*.o" ! -name "000-CatchMain.o" -or -name "volimage-test" \) -delete
 	find . -type f \( -name "*.gch" -or -name "tests-utils" -or -name "runner" \) -delete
+	find . -type f -name "*.raw" -delete
