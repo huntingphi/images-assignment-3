@@ -35,8 +35,12 @@ CXX = g++ # This is the main compiler
 CXXFLAGS = -std=c++11 -Wall
 VPATH = test src include bin build
 
+
+run: utils.o volimage.o driver.o
+	$(CXX) $(CXXFLAGS) -o bin/runner build/utils.o build/volimage.o build/driver.o
+
 run-build: volimage.o driver.o
-	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o && bin/runner
+	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o build/utils.o
 
 run-diffmap: volimage.o driver.o
 	$(CXX) $(CXXFLAGS) -o bin/runner build/volimage.o build/driver.o && bin/runner -d 0 1 test
@@ -82,4 +86,4 @@ tests-volimage.o: tests-volimage.cpp
 clean:
 	find . -type f \( -name "*.o" ! -name "000-CatchMain.o" -or -name "volimage-test" \) -delete
 	find . -type f \( -name "*.gch" -or -name "tests-utils" -or -name "runner" \) -delete
-	find . -type f -name "*.raw" -delete
+	find output_raws -type f -name "*.raw" -delete

@@ -1,3 +1,5 @@
+#ifndef METADATA
+  #define  METADATA
 #include <string>
 struct Metadata {
         std::string baseName;
@@ -9,3 +11,4 @@ struct Metadata {
         }
 
 };
+#endif

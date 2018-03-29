@@ -1,5 +1,12 @@
 #include <vector>
 #include <string>
+// #ifndef UTILS
+//   #define UTILS
+//   #include "utils.h"
+// #endif
+#include "utils.h"
+
+#include "Metadata.h"
 class VolImage {
 private:
 // private members
@@ -10,13 +17,22 @@ std::vector<unsigned char**> slices;
 // data for each slice, in order
 public:
 // public members
+int i, j;
+std::string output_name;
 VolImage();
 // default constructor - define in .cpp
 ~VolImage();
 // destructor - define in .cpp file
+
+Metadata readDataFile(std::string baseName);
+
 // populate the object with images in stack and
 //set member variables define in .cpp
 bool readImages(std::string baseName);
+
+unsigned char** readSlice(Metadata h, int index);
+
+
 // compute difference map and write out;  define in .cpp
 void diffmap(int sliceI, int sliceJ, std::string output_prefix);
 // extract slice sliceId and write to output - define in .cpp

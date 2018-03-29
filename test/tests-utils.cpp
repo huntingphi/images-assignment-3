@@ -44,12 +44,12 @@ TEST_CASE("Test readSlice"){
 }
 
 TEST_CASE("Test writeSliceToFile"){
-        std::ifstream expected_input( "/home/minad/Documents/CSC3022H/Assignments/Assignment 2/pointers and memory/assets/MRI0.raw",std::ios::in| std::ios::binary );
+        std::ifstream expected_input( "assets/MRI0.raw",std::ios::in| std::ios::binary );
         // copies all expected data into buffer
         std::vector<char> expected_buffer((std::istreambuf_iterator<char>(expected_input)),(std::istreambuf_iterator<char>()));
         Metadata h("MRI",429,303,123);
         Utils::writeSliceToFile(Utils::readSlice(h,0),h,0);
-        std::ifstream resulting_input( "/home/minad/Documents/CSC3022H/Assignments/Assignment 2/pointers and memory/assets_copy/MRI0copy.raw", std::ios::binary );
+        std::ifstream resulting_input( "output_raws/MRI0copy.raw", std::ios::binary );
         // copies all resulting data into buffer
         std::vector<char> resulting_buffer((std::istreambuf_iterator<char>(resulting_input)),(std::istreambuf_iterator<char>()));
         REQUIRE(std::equal(expected_buffer.begin(), expected_buffer.end(), resulting_buffer.begin()));

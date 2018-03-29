@@ -1,11 +1,75 @@
 // #include "../include/Metadata.h"
-#include "../include/utils.h"
+// #include "../include/volimage.h"
+#ifndef HEADERFILE
+  #define HEADERFILE
+  #include "../include/utils.h"
+#endif
 #include <vector>
 #include <iostream>
 #include <fstream>
 
 
 using namespace Utils;
+
+Operations Utils::parse_args(int argc, char* argv[]){
+        int i;
+        int j;
+        std::string output_name;
+        bool run_failed = false;
+        if (argc<6) {
+                if(argc==5) {
+                        // -d i j output file name:  compute a difference map between images i and j, and write this out to file
+                        std::string s = argv[2];
+                        std::string s1 = argv[1];
+                        std::string s2 = argv[3];
+
+                        bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
+                        bool has_only_digits_1 = (s2.find_first_not_of( "0123456789" ) == -1);
+
+                        if(s1=="-d"&&has_only_digits==true&&has_only_digits_1==true) {
+                                i = atoi(argv[2]);
+                                j = atoi(argv[3]);
+                                output_name = argv[4];
+
+                                return Operations::DIFF_MAP;
+                        }
+
+                }else if(argc == 4) {
+                        // -x i output file name:  extract and write the slice with number i and write this out to file.
+                        std::string s = argv[2];
+                        std::string s1 = argv[1];
+                        bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
+                        if(has_only_digits==true) {
+                                if(s1=="-x") return Operations::EXTRACT;
+                                if(s1=="-g") return Operations::EXTRACT_ACROSS_SLICES;
+                                i = atoi(argv[2]);
+                                output_name = argv[3];
+                        }
+
+
+                }else if(argc == 1) return Operations::BUILD;
+                // build the internal representation
+                // and then exit after ensuring memory is correctly cleaned up,
+                // and print the following to the console:
+                // Number of images:  (int)
+                // Number of bytes required:  (int)
+
+        }
+
+
+        return Operations::FAIL;
+
+        // if(run_failed == true){
+        //   showUsage();
+        //   return 1;
+        // }else{
+        //   return 0;
+        // }
+
+
+
+
+}
 
 Metadata Utils::readDataFile(std::string baseName){
         std::string filepath = "assets/"+baseName+".data";
@@ -71,7 +135,7 @@ void Utils::writeSliceToFile(unsigned char** slice, Metadata h, int index){
         int height = h.height;
         std::cout << "w: "<<width << '\n';
         // std::cout << "h: "<<height << '\n';
-        std::string filepath = "assets_copy/"+baseName+std::to_string(index)+"copy.raw";
+        std::string filepath = "output_raws/"+baseName+std::to_string(index)+"copy.raw";
         std::ofstream raw_image(filepath,std::ios::binary);
         if(!raw_image) throw std::runtime_error("Could not open file: "+ filepath);
         int c = 0;
