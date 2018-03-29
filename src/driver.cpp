@@ -34,6 +34,8 @@ int main(int argc, char *argv[]) {
                 showUsage();
                 break;
         }
+
+        showOperationInfo(num_imgs,num_bytes);
         return 0;
 }
 
@@ -49,7 +51,7 @@ int mockMethod(){
 void build(char* argv[]){
         std::string baseName = argv[1];
         VolImage image;
-        image.readRawFiles(baseName);
+        image.readImages(baseName);
 
 }
 
@@ -60,6 +62,8 @@ void extract(char* argv[]){
         VolImage image;
         Metadata meta = image.readDataFile(baseName);
         image.writeSliceToFile(image.readSlice(meta,i),meta,output_name);
+        num_imgs = image.volImageCount();
+        num_bytes = image.volImageSize();
 
 
 
@@ -71,12 +75,15 @@ void diffmap(char* argv[]){
         i = atoi(argv[3]);
         j = atoi(argv[4]);
         output_name = argv[5];
-        Metadata meta = image.readDataFile(baseName);
-        image.readRawFiles(baseName);
-        std::vector<unsigned char**> volume = image.getSlices();
-        unsigned char ** slice= image.VectorDifference(meta,volume,i,j);
-        image.writeSliceToFile(slice,meta,output_name);
-
+        image.diffmap(i,j,output_name);
+        //
+        // Metadata meta = image.readDataFile(baseName);
+        // image.readImages(baseName);
+        // std::vector<unsigned char**> volume = image.getSlices();
+        // unsigned char ** slice= image.VectorDifference(meta,volume,i,j);
+        // image.writeSliceToFile(slice,meta,output_name);
+        // num_imgs = image.volImageCount();
+        // num_bytes = image.volImageSize();
 
 }
 
@@ -88,20 +95,21 @@ void extractAcrossSlices(char* argv[]){
         Metadata meta = image.readDataFile(baseName);
         VolImage image;
         Metadata meta_output(output_name,meta.width,meta.number_of_images,1);
-        std::vector<unsigned char**> volume = Utils::readRawFiles(meta);
+        image.readImages(baseName);
+        std::vector<unsigned char**> volume = image.getSlices();
         // std::cout << (float)volume[0][0][0] << '\n';
         image.writeSliceToFile(image.extractAcrossSlices(meta, volume, i),meta_output,output_name);
-
+        num_imgs = image.volImageCount();
+        num_bytes = image.volImageSize();
 }
 
 
 
 void showUsage(){
-        std::cerr << "Usage: " << "runner" << " <imageBase> -d i j output file name" << std::endl;
-        std::cerr << "Usage: " << "runner" << " <imageBase> -x i output file name" << std::endl;
-        std::cerr << "Usage: " << "runner" << " <imageBase> -g i output file name" << std::endl;
-
-        std::cerr << "Usage: " << "runner" << " <imageBase>" << std::endl;
+        std::cerr << "Usage: " << "volimage" << " <imageBase> -d i j output file name" << std::endl;
+        std::cerr << "Usage: " << "volimage" << " <imageBase> -x i output file name" << std::endl;
+        std::cerr << "Usage: " << "volimage" << " <imageBase> -g i output file name" << std::endl;
+        std::cerr << "Usage: " << "volimage" << " <imageBase>" << std::endl;
 }
 
 void showOperationInfo(int num_imgs,int num_bytes){

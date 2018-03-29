@@ -25,11 +25,13 @@ Metadata VolImage::readDataFile(std::string baseName){
         std::string filepath = "assets/"+baseName+".data";
         std::ifstream dataFile(filepath);
         std::string name = baseName;
-        int width, height, num_imgs;
+        // int width, height;
         dataFile >> width;
         dataFile >> height;
         dataFile >> num_imgs;
         Metadata h(name,width,height,num_imgs);
+        // total_imgs = (int)num_imgs;
+
         return h;
 }
 
@@ -37,7 +39,7 @@ Metadata VolImage::readDataFile(std::string baseName){
 // populate the object with images in stack and
 //set member variables define in .cpp
 //TODO Change this to match class spec
-bool VolImage::readRawFiles(std::string baseName){
+bool VolImage::readImages(std::string baseName){
         Metadata md = readDataFile(baseName);
         baseName = md.baseName;
         int number_of_images = md.number_of_images;
@@ -48,6 +50,7 @@ bool VolImage::readRawFiles(std::string baseName){
                 c++;
         }
         // return slices;
+        // std::cout << number_of_images << '\n';
         return c==number_of_images;
 }
 
@@ -125,9 +128,9 @@ void VolImage::writeSliceToFile(unsigned char** slice, Metadata h, std::string o
 
 
 void VolImage::diffmap(int sliceI, int sliceJ, std::string output_prefix){
-        Metadata image_data = Utils::readDataFile(baseName);
+        Metadata image_data = readDataFile(baseName);
         Metadata output_data(output_prefix,width,height,1);
-        Utils::writeSliceToFile(Utils::VectorDifference(image_data,slices,sliceI,sliceJ),output_data,0);
+        writeSliceToFile(VectorDifference(image_data,slices,sliceI,sliceJ),output_data,output_prefix);
         // extract slice sliceId and write to output - define in .cpp
 
 }
@@ -170,20 +173,25 @@ unsigned char** VolImage::extractAcrossSlices(Metadata h,std::vector<unsigned ch
 
 void VolImage::extract(int sliceId, std::string output_prefix){
         Metadata output_data(output_prefix,width,height,1);
-        Utils::writeSliceToFile(slices[sliceId],output_data,sliceId);
+        writeSliceToFile(slices[sliceId],output_data,sliceId);
         // number of bytes uses to store image data bytes
         //and pointers (ignore vector<> container, dims etc)
 }
 
-void VolImage::extractAcross(int sliceId, std::string output_prefix){
-        Metadata image_data = Utils::readDataFile(baseName);
-        Metadata output_data(output_prefix,width,height,1);
-        Utils::writeSliceToFile(Utils::extractAcrossSlices(image_data,slices,sliceId),output_data,0);
-        // number of bytes uses to store image data bytes
-        //and pointers (ignore vector<> container, dims etc)
-}
+// void VolImage::extractAcross(int sliceId, std::string output_prefix){
+//         Metadata image_data = Utils::readDataFile(baseName);
+//         Metadata output_data(output_prefix,width,height,1);
+//         Utils::writeSliceToFile(Utils::extractAcrossSlices(image_data,slices,sliceId),output_data,0);
+//         // number of bytes uses to store image data bytes
+//         //and pointers (ignore vector<> container, dims etc)
+// }
 
 int VolImage::volImageSize(void){
         //TODO check if this works
-        return sizeof(slices);
+        return sizeof(slices)+num_imgs*sizeof(slices[0])+height*sizeof(slices[0][0])+width*sizeof(slices[0][0][0]+num_imgs*width*height);
+}
+
+int VolImage::volImageCount(void){
+        //TODO check if this works
+        return num_imgs;
 }

@@ -17,7 +17,7 @@ std::vector<unsigned char**> slices;
 // data for each slice, in order
 public:
 // public members
-int i, j;
+int i, j,num_imgs;
 std::string output_name;
 VolImage();
 // default constructor - define in .cpp
@@ -30,7 +30,6 @@ Metadata readDataFile(std::string baseName);
 //set member variables define in .cpp
 bool readImages(std::string baseName);
 
-bool readRawFiles(std::string baseName);
 
 unsigned char** readSlice(Metadata h, int index);
 
@@ -55,6 +54,7 @@ void extractAcross(int sliceId, std::string output_prefix);
 //and pointers (ignore vector<> container, dims etc)
 int volImageSize(void);
 // define in .cpp
+int volImageCount(void);
 
 
 

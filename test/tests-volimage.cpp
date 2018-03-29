@@ -49,7 +49,7 @@ TEST_CASE("Test writeSliceToFile"){
         // copies all expected data into buffer
         std::vector<char> expected_buffer((std::istreambuf_iterator<char>(expected_input)),(std::istreambuf_iterator<char>()));
         Metadata h("MRI",429,303,123);
-        image.readRawFiles("MRI");
+        image.readImages("MRI");
         std::vector<unsigned char**> raws = image.getSlices();
         image.writeSliceToFile(image.readSlice(h,0),h,"SliceTest");
         std::ifstream resulting_input( "output_raws/SliceTest.raw", std::ios::binary );
@@ -58,18 +58,18 @@ TEST_CASE("Test writeSliceToFile"){
         REQUIRE(std::equal(expected_buffer.begin(), expected_buffer.end(), resulting_buffer.begin()));
 }
 
-TEST_CASE("Test readRawFiles"){
+TEST_CASE("Test readImages"){
         VolImage image;
         Metadata h("MRI",429,303,123);
         int height = h.height;
         int width = h.width;
-        image.readRawFiles("MRI");
+        image.readImages("MRI");
         std::vector<unsigned char**> raws = image.getSlices();
 
         unsigned char** slice = new unsigned char* [height];
         bool flag = true;
         for (int img_index = 0; img_index < h.number_of_images; img_index++) {
-                slice = Utils::readSlice(h,img_index); //read slice for current index
+                slice = image.readSlice(h,img_index); //read slice for current index
                 // bool flag = true;
                 for (int i = 0; i < height; i++) {
                         for (int j = 0; j < width; j++) {
@@ -87,11 +87,12 @@ TEST_CASE("Test readRawFiles"){
 TEST_CASE("Test VectorDifference"){
         VolImage image;
         Metadata h("MRI",429,303,123);
-        image.readRawFiles("MRI");
+        image.readImages("MRI");
         Metadata o("5_27_Diffmap",429,303,123);
 
-        std::vector<unsigned char**> volume = image.getSlices();
-        image.writeSliceToFile(image.VectorDifference(h,volume,5,27),h,"5_27_DiffmapTest");
+        // std::vector<unsigned char**> volume = image.getSlices();
+        // image.writeSliceToFile(image.VectorDifference(h,volume,5,27),h,"5_27_DiffmapTest");
+        image.diffmap(5,27,"5_27_Diffmap");
         std::ifstream expected_input( "assets/5_27_Diffmap.raw",std::ios::in| std::ios::binary );
         // copies all expected data into buffer
         std::vector<char> expected_buffer((std::istreambuf_iterator<char>(expected_input)),(std::istreambuf_iterator<char>()));
@@ -106,7 +107,8 @@ TEST_CASE("Test extractAcrossSlices"){
         VolImage image;
         Metadata h("MRI",429,303,123);
         Metadata o("MRI_ACROSS",429,123,1);
-        std::vector<unsigned char**> volume = Utils::readRawFiles(h);
+        image.readImages("MRI");
+        std::vector<unsigned char**> volume = image.getSlices();
         // std::cout << (float)volume[0][0][0] << '\n';
         image.writeSliceToFile(image.extractAcrossSlices(h, volume, 0),o,0);
         REQUIRE(1==1);
