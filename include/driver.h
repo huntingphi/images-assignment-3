@@ -9,6 +9,7 @@ int mockMethod();
 void build(char* argv[]);
 void diffmap(char* argv[]);
 void extract(char* argv[]);
+void extractAcrossSlices(char* argv[]);
 
 VolImage image;
 std::string baseName;

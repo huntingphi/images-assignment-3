@@ -51,15 +51,12 @@ run-extract: volimage.o driver.o
 driver.o: driver.cpp driver.h
 	$(CXX) $(CXXFLAGS) -c src/driver.cpp -o build/driver.o
 
+
+test: 000-CatchMain.o volimage.o tests-volimage.cpp Metadata.o utils.o tests-volimage.o
+	$(CXX) $(CXXFLAGS) -I ./include -o bin/test build/000-CatchMain.o build/volimage.o build/Metadata.o build/utils.o build/tests-volimage.o && ./bin/test --success
+
 volimage.o: volimage.cpp volimage.h
 	$(CXX) $(CXXFLAGS) -c src/volimage.cpp -o build/volimage.o
-
-
-test: 000-CatchMain.o volimage.o driver.o tests-volimage.o Metadata.o utils.o tests-utils.o
-	./bin/tests-volimage --success
-	./bin/tests-utils --success
-
-
 
 tests-utils: 000-CatchMain.o tests-utils.cpp Metadata.o utils.o tests-utils.o
 	$(CXX) $(CXXFLAGS) -I ./include -o bin/tests-utils build/000-CatchMain.o build/Metadata.o build/utils.o build/tests-utils.o && ./bin/tests-utils
@@ -75,7 +72,9 @@ tests-utils.o: tests-utils.cpp
 
 
 tests-volimage.o: tests-volimage.cpp
-	$(CXX) $(CXXFLAGS) -I ./include -o bin/tests-volimage build/000-CatchMain.o build/volimage.o build/driver.o test/tests-volimage.cpp
+	# $(CXX) $(CXXFLAGS) -I ./include -c build/volimage.o test/tests-volimage.cpp
+	echo "Testing VolImage..."
+	$(CXX) $(CXXFLAGS) -c test/tests-volimage.cpp -o build/tests-volimage.o
 
 
 000-CatchMain.o: 000-CatchMain.cpp catch.hpp

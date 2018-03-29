@@ -16,38 +16,38 @@ Operations Utils::parse_args(int argc, char* argv[]){
         int j;
         std::string output_name;
         bool run_failed = false;
-        if (argc<6) {
-                if(argc==5) {
+        if (argc<7) {
+                if(argc==6) {
                         // -d i j output file name:  compute a difference map between images i and j, and write this out to file
-                        std::string s = argv[2];
-                        std::string s1 = argv[1];
-                        std::string s2 = argv[3];
+                        std::string s = argv[3];
+                        std::string s1 = argv[2];
+                        std::string s2 = argv[4];
 
                         bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
                         bool has_only_digits_1 = (s2.find_first_not_of( "0123456789" ) == -1);
 
                         if(s1=="-d"&&has_only_digits==true&&has_only_digits_1==true) {
-                                i = atoi(argv[2]);
-                                j = atoi(argv[3]);
-                                output_name = argv[4];
+                                i = atoi(argv[3]);
+                                j = atoi(argv[4]);
+                                output_name = argv[5];
 
                                 return Operations::DIFF_MAP;
                         }
 
-                }else if(argc == 4) {
+                }else if(argc == 5) {
                         // -x i output file name:  extract and write the slice with number i and write this out to file.
-                        std::string s = argv[2];
-                        std::string s1 = argv[1];
+                        std::string s = argv[3];
+                        std::string s1 = argv[2];
                         bool has_only_digits = (s.find_first_not_of( "0123456789" ) == -1);
                         if(has_only_digits==true) {
                                 if(s1=="-x") return Operations::EXTRACT;
                                 if(s1=="-g") return Operations::EXTRACT_ACROSS_SLICES;
-                                i = atoi(argv[2]);
-                                output_name = argv[3];
+                                i = atoi(argv[3]);
+                                output_name = argv[4];
                         }
 
 
-                }else if(argc == 1) return Operations::BUILD;
+                }else if(argc == 2) return Operations::BUILD;
                 // build the internal representation
                 // and then exit after ensuring memory is correctly cleaned up,
                 // and print the following to the console:
@@ -146,6 +146,8 @@ void Utils::writeSliceToFile(unsigned char** slice, Metadata h, int index){
         std::cout << c<<" writes successful" << '\n';
         raw_image.close();
 }
+
+
 
 unsigned char** Utils::VectorDifference(Metadata h,std::vector<unsigned char**> volume,int i, int j){
         int height = h.height;

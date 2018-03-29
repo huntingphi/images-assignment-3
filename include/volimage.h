@@ -30,12 +30,23 @@ Metadata readDataFile(std::string baseName);
 //set member variables define in .cpp
 bool readImages(std::string baseName);
 
+bool readRawFiles(std::string baseName);
+
 unsigned char** readSlice(Metadata h, int index);
 
+void writeSliceToFile(unsigned char** slice, Metadata h, int index);
+
+void writeSliceToFile(unsigned char** slice, Metadata h, std::string output_name);
 
 // compute difference map and write out;  define in .cpp
 void diffmap(int sliceI, int sliceJ, std::string output_prefix);
 // extract slice sliceId and write to output - define in .cpp
+
+unsigned char** VectorDifference(Metadata h,std::vector<unsigned char**> volume,int i, int j);
+
+unsigned char** extractAcrossSlices(Metadata h,std::vector<unsigned char**> volume,int row);
+
+
 void extract(int sliceId, std::string output_prefix);
 //
 //
@@ -44,5 +55,11 @@ void extractAcross(int sliceId, std::string output_prefix);
 //and pointers (ignore vector<> container, dims etc)
 int volImageSize(void);
 // define in .cpp
+
+
+
+std::vector<unsigned char**> getSlices(){
+        return slices;
+}
 
 };
